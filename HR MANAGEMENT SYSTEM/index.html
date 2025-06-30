@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Index</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .ivms-section {
+      padding: 20px 30px;
+      margin-top: 30px;
+      background-color: #fafafa;
+      border: 1px solid #ddd;
+    }
+
+    .ivms-section h3 {
+      margin-bottom: 10px;
+      color: #4e342e;
+    }
+  </style>
+</head>
+<body>
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background-color: #4e342e; border-bottom: 1px solid #3e2f27;">
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <h1 style="margin: 0; font-size: 24px; color: #f5f0e6;">HR MANAGEMENT SYSTEM</h1>
+    <span style="font-size: 12px; color: #d7ccc8;">Prototype by <strong>ALYF</strong></span>
+  </div>
+  <a href="auth.html" style="text-decoration: none; background-color: #8d6e63; color: #f5f0e6; padding: 10px 16px; border-radius: 6px; font-size: 14px; transition: background-color 0.3s;">
+    Login
+  </a>
+</header>
+
+<nav class="sidebar">
+    <ul>
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="all-employees.html">All Employees</a></li>
+      <li><a href="staff.html">Staff</a></li>
+      <li><a href="interns.html">Interns</a></li>
+      <li><a href="leave-requests.html">Leave Requests</a></li>
+      <li><a href="reports.html">Reports</a></li>
+      <li><a href="document.html">Documents</a></li>
+    </ul>
+</nav>
+
+<main>
+  <section class="dashboard-header">
+    <h2>Dashboard</h2>
+    <p>Welcome back! Here's a quick overview of your HR system.</p>
+  </section>
+
+  <section class="dashboard-cards">
+    <div class="card"><h3>Total Employees</h3><p>32</p></div>
+    <div class="card"><h3>Active Staff</h3><p>25</p></div>
+    <div class="card"><h3>Interns</h3><p>7</p></div>
+    <div class="card"><h3>Leave Requests</h3><p>3 Pending</p></div>
+  </section>
+
+  <section class="chart-section">
+    <h2>Today's Attendance</h2>
+    <canvas id="activityChart" width="600" height="300"></canvas>
+  </section>
+
+  <section class="time-log-section">
+    <h3>Attendance Records by Branch</h3>
+    <div id="attendanceRecordsContainer"></div>
+  </section>
+</main>
+
+<script>
+  const attendanceData = JSON.parse(localStorage.getItem("attendanceData")) || {
+    Pahang: [], Johor: [], Kelantan: [], Perak: []
+  };
+
+  function getFlatAttendanceRecords() {
+    const records = [];
+    const today = new Date().toISOString().split("T")[0];
+    for (const branch in attendanceData) {
+      attendanceData[branch].forEach(record => {
+        if (record.date === today) {
+          records.push({
+            username: record.name,
+            branch: branch,
+            dateTime: record.date + " " + record.clockIn,
+            location: record.clockInLoc || '-',
+          });
+          if (record.clockOut) {
+            records.push({
+              username: record.name,
+              branch: branch,
+              dateTime: record.date + " " + record.clockOut,
+              location: record.clockOutLoc || '-',
+            });
+          }
+        }
+      });
+    }
+    return records;
+  }
+
+  function renderAttendanceRecords() {
+    const container = document.getElementById('attendanceRecordsContainer');
+    container.innerHTML = '';
+    const flatRecords = getFlatAttendanceRecords();
+    const grouped = flatRecords.reduce((acc, rec) => {
+      if (!acc[rec.branch]) acc[rec.branch] = [];
+      acc[rec.branch].push(rec);
+      return acc;
+    }, {});
+    for (const branch in grouped) {
+      const sectionTitle = document.createElement('h4');
+      sectionTitle.textContent = branch;
+      container.appendChild(sectionTitle);
+      const table = createAttendanceTable(grouped[branch]);
+      container.appendChild(table);
+    }
+    if (flatRecords.length === 0) {
+      container.textContent = 'No attendance recorded yet for today.';
+      container.style.fontStyle = 'italic';
+      container.style.color = '#555';
+    }
+  }
+
+  function createAttendanceTable(records) {
+    const table = document.createElement('table');
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.style.marginBottom = '30px';
+    table.border = '1';
+    const thead = document.createElement('thead');
+    thead.style.backgroundColor = '#f4f4f4';
+    thead.innerHTML = `
+      <tr>
+        <th style="padding:8px; border: 1px solid #ccc;">Name</th>
+        <th style="padding:8px; border: 1px solid #ccc;">Date & Time</th>
+        <th style="padding:8px; border: 1px solid #ccc;">Location</th>
+      </tr>`;
+    const tbody = document.createElement('tbody');
+    records.forEach(rec => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="padding:8px; border: 1px solid #ccc;">${rec.username}</td>
+        <td style="padding:8px; border: 1px solid #ccc;">${rec.dateTime}</td>
+        <td style="padding:8px; border: 1px solid #ccc;">${rec.location}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    return table;
+  }
+
+  function getAttendanceCounts() {
+    const today = new Date().toISOString().split("T")[0];
+    const branchTotals = { HQ:30, Pahang: 10, Johor: 5, Kelantan: 3, Perak: 8 };
+    const attendanceCount = {};
+    for (const branch in attendanceData) {
+      const usersSet = new Set();
+      attendanceData[branch].forEach(record => {
+        if (record.date === today) {
+          usersSet.add(record.name);
+        }
+      });
+      attendanceCount[branch] = usersSet.size || 0;
+    }
+    return { branchTotals, attendanceCount };
+  }
+
+  function renderChart() {
+    const { branchTotals, attendanceCount } = getAttendanceCounts();
+    const labels = [], data = [];
+    for (const branch in branchTotals) {
+      const total = branchTotals[branch];
+      const attended = attendanceCount[branch] || 0;
+      labels.push(`${branch} (${attended}/${total})`);
+      data.push(attended);
+    }
+    const ctx = document.getElementById('activityChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: "Today's Attendance",
+          data,
+          backgroundColor: '#3498db',
+          borderRadius: 6,
+          barPercentage: 0.6
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, color: '#333', font: { size: 12 } }
+          },
+          x: {
+            ticks: { color: '#333', font: { size: 13 } }
+          }
+        },
+        animation: {
+          onComplete() {
+            const chart = this;
+            const ctx = chart.ctx;
+            ctx.font = 'bold 13px Arial';
+            ctx.fillStyle = '#000';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            chart.data.datasets.forEach((dataset, i) => {
+              const meta = chart.getDatasetMeta(i);
+              meta.data.forEach((bar, index) => {
+                ctx.fillText(dataset.data[index], bar.x, bar.y - 6);
+              });
+            });
+          }
+        }
+      }
+    });
+  }
+
+  // Initialize
+  renderAttendanceRecords();
+  renderChart();
+</script>
+</body>
+</html>
+

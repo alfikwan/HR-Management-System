@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - HR Management System</title>
+  <style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to right, #a1887f, #d7ccc8);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #4e342e;
+}
+
+.login-container {
+  background-color: #fffaf5;
+  padding: 36px 28px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 360px; /* reduce slightly */
+  border: 1px solid #e0d6cd;
+  box-sizing: border-box;
+}
+
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #4e342e;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #6d4c41;
+  font-weight: 400;
+}
+
+input,
+select {
+  width: 100%;
+  max-width: 100%; /* Ensure inputs never exceed container */
+  padding: 10px 14px;
+  border: 1px solid #d7ccc8;
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #fdf6f1;
+  color: #4e342e;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #8d6e63;
+  background-color: #fff;
+}
+
+.login-link {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: #8d6e63;
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  margin-top: 8px;
+}
+
+.login-link:hover {
+  background-color: #6d4c41;
+}
+
+.register-link {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #6d4c41;
+}
+
+.register-link a {
+  color: #795548;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.register-link a:hover {
+  color: #5d4037;
+}
+
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>HR System Login</h2>
+      <form>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+        <div class="form-group">
+          <label for="role">Select Role</label>
+          <select id="role" required>
+            <option value="" disabled selected>Select your role</option>
+            <option value="admin">Admin</option>
+            <option value="staff">Staff</option>
+            <option value="intern">Intern</option>
+          </select>
+        </div>
+        <!-- Replacing button with a styled link -->
+        <a href="index.html" class="login-link">Login</a>
+        <p class="register-link">Don't have an account? <a href="#">Register</a></p>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
+

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leave Requests</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      color: #2c3e50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .toggle-button {
+      display: inline-block;
+      background-color: #2ecc71;
+      color: white;
+      padding: 10px 18px;
+      margin-bottom: 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+
+    .toggle-button:hover {
+      background-color: #27ae60;
+    }
+
+    form {
+      margin-bottom: 40px;
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    form button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #2980b9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    table thead {
+      background-color: #ecf0f1;
+    }
+
+    table th, table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    table tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    td.status-pending {
+      color: #f39c12;
+      font-weight: bold;
+    }
+
+    td.status-approved {
+      color: #27ae60;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background-color: #4e342e; border-bottom: 1px solid #3e2f27;">
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <h1 style="margin: 0; font-size: 24px; color: #f5f0e6;">HR MANAGEMENT SYSTEM</h1>
+    <span style="font-size: 12px; color: #d7ccc8;">Prototype by <strong>ALYF</strong></span>
+  </div>
+  <a href="auth.html" style="text-decoration: none; background-color: #8d6e63; color: #f5f0e6; padding: 10px 16px; border-radius: 6px; font-size: 14px; transition: background-color 0.3s;">
+    Login
+  </a>
+</header>
+
+<nav class="sidebar">
+    <ul>
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="all-employees.html">All Employees</a></li>
+      <li><a href="staff.html">Staff</a></li>
+      <li><a href="interns.html">Interns</a></li>
+      <li><a href="leave-requests.html">Leave Requests</a></li>
+      <li><a href="reports.html">Reports</a></li>
+      <li><a href="document.html">Documents</a></li>
+    </ul>
+</nav>
+
+<main>
+  <h2>Leave Management</h2>
+  <button class="toggle-button" onclick="toggleForm()">+ Request Leave</button>
+
+  <form id="leaveForm">
+    <label>
+      Name:
+      <input type="text" id="employeeName" required>
+    </label>
+
+    <label>
+      Role:
+      <select id="role" required>
+        <option value="">-- Select Role --</option>
+        <option value="Employee">Employee</option>
+        <option value="Intern">Intern</option>
+      </select>
+    </label>
+
+    <label>
+      Leave Type:
+      <select id="leaveType" required>
+        <option value="">-- Select Leave Type --</option>
+        <option value="Annual Leave">Annual Leave</option>
+        <option value="Sick Leave">Sick Leave</option>
+        <option value="Emergency Leave">Emergency Leave</option>
+      </select>
+    </label>
+
+    <label>
+      From:
+      <input type="date" id="leaveFrom" required>
+    </label>
+
+    <label>
+      To:
+      <input type="date" id="leaveTo" required>
+    </label>
+
+    <button type="submit">Submit Request</button>
+  </form>
+
+ 
+  <h2>Leave Requests</h2>
+  <table id="leaveTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Type</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Shakhir Saidy</td>
+        <td>Employee</td>
+        <td>Annual Leave</td>
+        <td>2025-05-01</td>
+        <td>2025-05-10</td>
+        <td class="status-pending">Pending</td>
+      </tr>
+      <tr>
+        <td>Ali Fahmi</td>
+        <td>Intern</td>
+        <td>Sick Leave</td>
+        <td>2025-05-05</td>
+        <td>2025-05-07</td>
+        <td class="status-approved">Approved</td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+  <script>
+    const leaveEvents = [
+      {
+        title: 'Shakhir Saidy - Annual Leave',
+        start: '2025-05-01',
+        end: '2025-05-11',
+        color: '#2980b9'
+      },
+      {
+        title: 'Ali Fahmi - Sick Leave',
+        start: '2025-05-05',
+        end: '2025-05-08',
+        color: '#f39c12'
+      }
+    ];
+
+
+
+    function toggleForm() {
+      const form = document.getElementById('leaveForm');
+      form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+    }
+
+    document.getElementById('leaveForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('employeeName').value;
+      const role = document.getElementById('role').value;
+      const type = document.getElementById('leaveType').value;
+      const from = document.getElementById('leaveFrom').value;
+      const to = document.getElementById('leaveTo').value;
+
+      const tbody = document.querySelector('#leaveTable tbody');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${role}</td>
+        <td>${type}</td>
+        <td>${from}</td>
+        <td>${to}</td>
+        <td class="status-pending">Pending</td>
+      `;
+      tbody.appendChild(row);
+
+      leaveEvents.push({
+        title: `${name} - ${type}`,
+        start: from,
+        end: new Date(new Date(to).getTime() + 86400000).toISOString().split('T')[0],
+        color: role === 'Intern' ? '#f39c12' : '#2980b9'
+      });
+
+      renderCalendar();
+      this.reset();
+      this.style.display = 'none';
+    });
+
+    document.addEventListener('DOMContentLoaded', renderCalendar);
+  </script>
+
+</body>
+</html>

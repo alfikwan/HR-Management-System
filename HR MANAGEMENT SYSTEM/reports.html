@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reports</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background-color: #4e342e; border-bottom: 1px solid #3e2f27;">
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <h1 style="margin: 0; font-size: 24px; color: #f5f0e6;">HR MANAGEMENT SYSTEM</h1>
+    <span style="font-size: 12px; color: #d7ccc8;">Prototype by <strong>ALYF</strong></span>
+  </div>
+  <a href="auth.html" style="text-decoration: none; background-color: #8d6e63; color: #f5f0e6; padding: 10px 16px; border-radius: 6px; font-size: 14px; transition: background-color 0.3s;">
+    Login
+  </a>
+</header>
+
+
+  <nav class="sidebar">
+    <ul>
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="all-employees.html">All Employees</a></li>
+      <li><a href="staff.html">Staff</a></li>
+      <li><a href="interns.html">Interns</a></li>
+      <li><a href="leave-requests.html">Leave Requests</a></li>
+      <li><a href="reports.html">Reports</a></li>
+      <li><a href="document.html">Documents</a></li>
+    </ul>
+  </nav>
+
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eef2f5;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 40px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    h3 {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      box-sizing: border-box;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+      outline: none;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 14px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .alert {
+      display: none;
+      padding: 14px 18px;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 6px;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        margin: 20px;
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<main>
+  <section>
+    <h3>Submit a Report or Complaint</h3>
+    <form id="reportForm">
+      <div>
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+
+      <div>
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required>
+      </div>
+
+      <div>
+        <label for="message">Report:</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="formMessage" class="alert">Your report has been submitted successfully.</div>
+  </section>
+</main>
+
+<script>
+  document.getElementById("reportForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const subject = document.getElementById("subject").value.trim();
+    const message = document.getElementById("message").value.trim();
+    const formMessage = document.getElementById("formMessage");
+
+    if (!name || !subject || !message) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    // Simulate sending to backend
+    console.log("Sending report:", { name, subject, message });
+
+    // Show success message
+    formMessage.style.display = "block";
+
+    // Reset form
+    this.reset();
+
+    // Hide success message after 3 seconds
+    setTimeout(() => {
+      formMessage.style.display = "none";
+    }, 3000);
+  });
+</script>
+
+</body>
+</html>

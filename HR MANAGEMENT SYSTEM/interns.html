@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interns</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background-color: #4e342e; border-bottom: 1px solid #3e2f27;">
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <h1 style="margin: 0; font-size: 24px; color: #f5f0e6;">HR MANAGEMENT SYSTEM</h1>
+    <span style="font-size: 12px; color: #d7ccc8;">Prototype by <strong>ALYF</strong></span>
+  </div>
+  <a href="auth.html" style="text-decoration: none; background-color: #8d6e63; color: #f5f0e6; padding: 10px 16px; border-radius: 6px; font-size: 14px; transition: background-color 0.3s;">
+    Login
+  </a>
+</header>
+
+
+  <nav class="sidebar">
+    <ul>
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="all-employees.html">All Employees</a></li>
+      <li><a href="staff.html">Staff</a></li>
+      <li><a href="interns.html">Interns</a></li>
+      <li><a href="leave-requests.html">Leave Requests</a></li>
+      <li><a href="reports.html">Reports</a></li>
+      <li><a href="document.html">Documents</a></li>
+    </ul>
+  </nav>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      color: #2c3e50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .add-button {
+      background-color: #2ecc71;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+
+    .add-button:hover {
+      background-color: #27ae60;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    form {
+      margin-bottom: 40px;
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    form button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #2980b9;
+    }
+
+    .employee-card {
+      border: 1px solid #ddd;
+      padding: 16px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      background-color: #fdfdfd;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <div class="section-header">
+      <h2>Interns</h2>
+      <button class="add-button" onclick="toggleForm()">+ Add Intern</button>
+    </div>
+
+    <form id="intern-form" onsubmit="addIntern(event)">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Full name" required />
+
+      <label for="position">Department</label>
+      <input type="text" id="position" placeholder="Department" required />
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div class="employee-cards"></div>
+  </main>
+
+  <script>
+    function toggleForm() {
+      const form = document.getElementById('intern-form');
+      form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function renderEmployeeCard(emp) {
+      const container = document.querySelector('.employee-cards');
+      const card = document.createElement('div');
+      card.classList.add('employee-card');
+      card.innerHTML = `
+        <h3>${emp.name}</h3>
+        <p><strong>Department:</strong> ${emp.position}</p>
+        <p><strong>Status:</strong> ${emp.status || 'Active'}</p>
+      `;
+      container.appendChild(card);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const employees = JSON.parse(localStorage.getItem('employees')) || [];
+      const internList = employees.filter(emp => emp.type === 'Intern');
+
+      document.querySelector('.employee-cards').innerHTML = '';
+      internList.forEach(renderEmployeeCard);
+    });
+
+    function addIntern(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const position = document.getElementById('position').value.trim();
+
+      if (!name || !position) return;
+
+      const newIntern = {
+        name,
+        position,
+        type: 'Intern',
+        status: 'Active'
+      };
+
+      let employees = JSON.parse(localStorage.getItem('employees')) || [];
+      employees.push(newIntern);
+      localStorage.setItem('employees', JSON.stringify(employees));
+
+      renderEmployeeCard(newIntern);
+      event.target.reset();
+      toggleForm();
+    }
+  </script>
+
+</body>
+</html>
