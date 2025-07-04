@@ -67,21 +67,7 @@
   </section>
 </main>
 
-<script>
-  const attendanceData = JSON.parse(localStorage.getItem("attendanceData")) || {
-    Pahang: [], Johor: [], Kelantan: [], Perak: []
-  };
 
-  function getFlatAttendanceRecords() {
-    const records = [];
-    const today = new Date().toISOString().split("T")[0];
-    for (const branch in attendanceData) {
-      attendanceData[branch].forEach(record => {
-        if (record.date === today) {
-          records.push({
-            username: record.name,
-            branch: branch,
-            dateTime: record.date + " " + record.clockIn,
             location: record.clockInLoc || '-',
           });
           if (record.clockOut) {
